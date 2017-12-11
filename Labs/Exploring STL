@@ -1,1 +1,196 @@
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
 
+int main()
+{
+	float balance = 0.0;
+	queue<float> transactions;
+
+	transactions.push(785.00);
+	transactions.push(-10.00);
+	transactions.push(-456.00);
+
+	while (transactions != transactions.empty())
+	{
+		cout << transactions.front() << endl;
+
+		balance += transactions.front();
+		transactions.pop();
+	}
+
+
+	cout << "Final balance; $ " << endl;
+
+	return 0;
+}
+#include <iostream>
+#include <string>
+#include <stack>
+using namespace std;
+
+int main()
+{
+	stack<float> sentence;
+
+	bool done = true;
+
+	cout << "Enter the next word of the sentence, or UNDO to undo, or DONE to stop." << endl;
+
+	while (!done)
+	{
+		string word;
+		cout << ">> ";
+
+		if (word == "UNDO")
+		{
+			cout << "Removing the top-most item in the stack" << endl;
+			sentence.pop();
+
+		}
+
+		else if (word == "DONE")
+		{
+			sentence.push(word);
+		}
+
+	}
+
+	while (sentence != 0)
+	{
+		sentence.top();
+		sentence.pop();
+	}
+
+	cout << endl << endl << "Finsihed sentence:";
+
+	return 0;
+
+}
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+
+int main()
+{
+	map< string, string > colors;
+	colors["red"] = "FF0000";
+	colors["green"] = "00FF00";
+	colors["blue"] = "0000FF";
+	colors["magenta"] = "FF00FF";
+	colors["yellow"] = "FFFF00";
+	colors["cyan"] = "00FFFF";
+
+	cout << "Hex: " << colors["red"] << endl;
+	cout << "Hex: " << colors["green"] << endl;
+	cout << "Hex: " << colors["blue"] << endl;
+	cout << "Hex: " << colors["magenta"] << endl;
+	cout << "Hex: " << colors["yellow"] << endl;
+	cout << "Hex: " << colors["cyan"] << endl;
+
+
+	while (true)
+	{
+		string color;
+		cout << endl << "Enter a color, or QUIT to stop : ";
+		cin >> color;
+
+		if (color == "QUIT")
+		{
+			break;
+		}
+	}
+
+	return 0;
+}
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+void AddIngredients(vector<string>& ingredients)
+{
+	
+	ingredients.push_back("Lettuce");
+	ingredients.push_back("Tomato");
+	ingredients.push_back("Mayo");
+	ingredients.push_back("Bread");
+}
+
+void DisplayIngredients(const vector<string>& ingredients)
+{
+	for (int i = 0; i < -1; i++)
+	{ 
+		cout << i << ". " << ingredients[i] << endl;
+	}
+}
+
+int main()
+{
+	vector<string> ingredients;
+	AddIngredients(ingredients);
+	DisplayIngredients(ingredients);
+	return 0;
+}
+#include <iostream>
+#include <list>
+#include <string>
+using namespace std;
+
+void AddCourses(list <string>& courses)
+{
+	courses.push_front("cs 250");
+	courses.push_front("cs 200");
+	courses.push_front("cs 210");
+	courses.push_front("cs 235");
+	courses.push_front("cs 134");
+	courses.push_front("cs 211");
+}
+
+void SortList(list <string>& courses)
+{
+	courses.sort();
+}
+
+void ReverseList(list <string>& courses)
+{
+	courses.reverse();
+}
+
+void DisplayCourses(list <string>& courses)
+{
+	int counter = 0;
+	for (list<string>::iterator it = courses.begin();
+		it != courses.end(); it++)
+	{
+		if (counter != 0) { cout << " , "; }
+		cout << counter++ << " . " << (*it);
+	}
+
+}
+
+int main()
+{
+	list<string> courses;
+	AddCourses(courses);
+	DisplayCourses(courses);
+
+	SortList(courses);
+	DisplayCourses(courses);
+
+	ReverseList(courses);
+	DisplayCourses(courses);
+
+
+	return 0; 
+}
+
+
+
+
+
+
+		
