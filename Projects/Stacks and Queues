@@ -1,0 +1,507 @@
+#include "AirTravelSimulator.hpp"
+
+//! Initialize the simulator program
+/**
+    Set the time stamp to 0,
+    and set the current state to WAITING.
+*/
+AirTravelSimulator::AirTravelSimulator()
+{
+	waitingTime = 0;
+	state = WAITING;
+}
+
+void AirTravelSimulator::Run()
+{
+	cout << "What is the max capacity for the airplane?" << endl;
+		cin >> max;
+	SetMacCapacity();
+
+	while (m_state != FINISHED)
+	{
+		if (state = WAITING)
+		{
+			state = LINEUP;
+		}
+
+		if (state = LINEUP)
+		{
+			LineUp();
+			state = BOARDING;
+		}
+
+		if (state = BOARDING)
+		{
+			Boarding();
+			state = DISEMBARKING;
+		}
+
+		if (state = DISEMBARKING)
+		{
+			Disembark();
+			state = FINISHED;
+		}
+
+		m_timeStamp++;
+		IncreaseWaitingTimes();
+		Stats();
+	}
+
+	cout << std::left << "TIME \t" << setw(4)
+		<< " ID \t" << setw(25)
+		<< "NAME" << setw(20)
+		<< "ACTION" << setw(10)
+		<< " WAIT TIME" << endl;
+}
+
+//! Add a new person to the line
+/**
+    1. Select a random index between 0 <= n < 1000. Store this in an integer.
+    2. Create a Traveller* pointer, and use the m_pplManager to get the traveller at the random index.
+    3. Line up the traveller in the airport waiting room using the LineUp(...) function that belongs to the m_airport object.
+    4. Also add this traveller to the m_ptrTravellers list that the AirFravelSimulator keeps track of.
+    5. Set the traveller's state to LINEUP.
+    6. Call the DisplayMessage(...) function, passing in the traveller and LINEUP.
+    7. Finally, return whether we're done lining people up...
+        If the m_airport's WaitingCount() is equal to the m_airport's GetMaxCapacity() then return true.
+
+    @return <bool>
+*/
+bool AirTravelSimulator::LineUp()
+{
+	
+    return false; // placeholder
+}
+
+//! Board the next person onto the airplane
+/**
+    1. Create a Traveller* pointer and get the next item in line from the m_airport. Use the NextInLine() function.
+    2. Board the traveller on the m_airplane using the Board(...) function.
+    3. Change the traveller's state to BOARDING.
+    4. Call the DisplayMessage(...) function, passing in the traveller and BOARDING.
+    5. Return true if the m_airport is empty, using IsEmpty().
+
+    @return <bool>
+*/
+bool AirTravelSimulator::Board()
+{
+	int * Traveller;
+	NextInLine();
+	Board();
+	state = BOARDING;
+	DisplayMessage(traveller, BOARDING);
+
+	if (m_airport.IsEmpty())
+	{
+		return true;
+	}
+}
+
+//! Pull the next person off the airplane
+/**
+    1. Create a Traveller* pointer and get the next item from the m_airplane with the Disembark() functino.
+    2. Set the traveller's state to FINISHED.
+    3. Call the DisplayMessage(...) function, passing in the traveller and DISEMBARKING.
+    4. Return true if m_airplane is empty, using IsEmpty().
+
+    @return <bool>
+*/
+bool AirTravelSimulator::Disembark()
+{
+	int * Traveller;
+	Disembark();
+	DisplayMessage(traveller, DISEMBARKING);
+
+	if (m_airplane.IsEmpty())
+	{
+		return true;
+	}
+}
+
+//! Display the statistics on the travellers
+/**
+    @return <void>
+*/
+void AirTravelSimulator::Stats()
+{
+	int totalWeightTime = 0;
+
+	cout << endl << "Passengers..." << endl;
+	cout << std::left << setw(30) << "NAME" << setw(20) << "WAIT TIME" << endl;
+	for (int i = 0; i < m_ptrTravellers.Size(); i++)
+	{
+		cout << setw(30) << m_ptrTravellers[i]->name << setw(20) << m_ptrTravellers[i]->waitingTime << endl;
+		totalWeightTime += m_ptrTravellers[i]->waitingTime;
+	}
+	float avgWaitTime = float(totalWeightTime) / float(m_ptrTravellers.Size());
+
+	cout << endl << "Statistics..." << endl;
+	cout << "* Total passengers: " << m_ptrTravellers.Size() << endl;
+	cout << "* Average wait time: " << avgWaitTime << endl;
+}
+
+//! Display updates on each traveller's actions
+/**
+    @return <void>
+*/
+void AirTravelSimulator::DisplayMessage(Traveller* ptrPerson, State action)
+{
+	cout << std::left << "(" << m_timeStamp << ") \t"
+		<< setw(4) << " #"
+		<< ptrPerson->id << "\t"
+		<< setw(25)
+		<< ptrPerson->name << setw(20);
+
+	if (action == LINEUP)
+	{
+		cout << "lines up";
+	}
+	else if (action == BOARDING)
+	{
+		cout << "boards";
+	}
+	else if (action == DISEMBARKING)
+	{
+		cout << "disembarks";
+	}
+	cout << setw(10) << " (Wait time: " << ptrPerson->waitingTime << ")" << endl;
+}
+
+#ifndef _AIRTRAVEL_HPP
+#define _AIRTRAVEL_HPP
+
+#include <vector>
+using namespace std;
+
+#include "TravellerManager.hpp"
+#include "Airplane.hpp"
+#include "Airport.hpp"
+#include "States.hpp"
+
+#include "DataStructures/LinkedList.hpp"
+
+//! Program class with different steps of the air travel experience
+class AirTravelSimulator
+{
+public:
+	AirTravelSimulator();
+
+	void Run();
+
+	bool LineUp();
+	bool Board();
+	bool Disembark();
+
+	void Stats();
+
+	void DisplayMessage(Traveller* ptrPerson, State action);
+
+private:
+	State m_state;
+	TravellerManager m_pplManager;
+	Airport m_airport;
+	Airplane m_airplane;
+	int m_timeStamp;
+	LinkedList<Traveller*> m_ptrTravellers;
+};
+
+#endif
+
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <cstdio>
+using namespace std;
+
+#include "AirTravelSimulator.hpp"
+
+int main()
+{
+	srand(time(NULL));
+
+	AirTravelSimulator sim;
+	sim.Run();
+
+	cout << "Press a key to continue...";
+	cin.ignore();
+	cin.get();
+
+	return 0;
+}
+#ifndef _STATES_HPP
+#define _STATES_HPP
+
+enum State { WAITING, LINEUP, BOARDING, DISEMBARKING, FINISHED };
+
+#endif
+#ifndef _TRAVELLER_HPP
+#define _TRAVELLER_HPP
+
+#include <string>
+using namespace std;
+
+#include "States.hpp"
+
+//! Traveller structure which contains a name, waiting time, and state.
+struct Traveller
+{
+	Traveller()
+	{
+		id = -1;
+		name = "";
+		waitingTime = 0;
+		state = WAITING;
+	}
+
+	string name;
+	int waitingTime;
+	int id;
+	State state;
+};
+
+
+#endif
+
+#ifndef _TRAVELLERMGR_HPP
+#define _TRAVELLERMGR_HPP
+
+#include <fstream>
+#include <string>
+using namespace std;
+
+#include "Traveller.hpp"
+
+//! A structure that contains the list of all travellers to keep up with (DONE)
+class TravellerManager
+{
+public:
+	TravellerManager()
+	{
+		LoadNames("names.txt");
+	}
+
+	void LoadNames(string filename)
+	{
+		ifstream input(filename);
+
+		string name;
+		int p = 0;
+		while (input >> name)
+		{
+			m_passengers[p].name = name;
+			m_passengers[p].id = p;
+			p++;
+			if (p >= 1000)
+				break;
+		}
+
+		input.close();
+	}
+
+	void IncreaseWaitingTimes()
+	{
+		for (int i = 0; i < 1000; i++)
+		{
+			if (m_passengers[i].state != FINISHED && m_passengers[i].state != WAITING )
+			{
+				m_passengers[i].waitingTime++;
+			}
+		}
+	}
+
+	Traveller* GetTraveller(int index)
+	{
+		return &m_passengers[index];
+	}
+
+private:
+	Traveller m_passengers[1000];
+};
+
+#endif
+
+#include "Airplane.hpp"
+#include <stack>
+
+//! Move traveller onto airplane
+/**
+    For the traveller passed in, push it into the airplane's stack.
+
+    @param <Traveller*> traveller
+    @return <void>
+*/
+void Airplane::Board(Traveller* traveller)
+{
+	stack.Push(traveller);
+}
+
+//! Pull traveller off airplane
+/**
+    Get the next (top-most) traveller from the airplane stack,
+    remove them from the stack and return the traveller.
+
+    @return <Traveller*>
+*/
+Traveller* Airplane::Disembark()
+{
+	Top(traveller);
+	stack.Pop();
+	return traveller;
+}
+
+//! Return whether the airplane is empty (no passengers)
+/**
+    If the size of the stack is 0, then the airplane is empty.
+
+    @return <bool>
+*/
+bool Airplane::IsEmpty()
+{
+	if ( stack.size() == 0)
+	{
+		return true;
+	}
+}
+
+
+#ifndef _AIRPORT_HPP
+#define _AIRPORT_HPP
+
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <fstream>
+#include <stack>
+#include <queue>
+#include <iomanip>
+using namespace std;
+
+#include "Traveller.hpp"
+
+#include "DataStructures/Stack.hpp"
+
+//! Airplane structure that has Board and Disembark functionality
+class Airplane
+{
+public:
+	void Board(Traveller* traveller);
+	Traveller* Disembark();
+	bool IsEmpty();
+
+private:
+    // Add a Stack of Traveller*'s
+};
+
+#endif
+
+#include "Airport.hpp"
+#include <queue>
+//! Add an item into the queue to get on the airplane
+/**
+    For the Traveller pointer passed in as the parameter,
+    push them into the line queue.
+
+    @param <Traveller*> traveller
+    @return <void>
+*/
+void Airport::LineUp(Traveller* traveller)
+{
+	Push();
+}
+
+//! Get the person at the front of the line
+/**
+    Get the person at the front of the queue and return them.
+    Make sure you're also removing that person from the front of the queue.
+
+    @return <Traveller*>
+*/
+Traveller* Airport::NextInLine()
+{
+    return Front(); // placeholder
+}
+
+//! Returns whether the waiting room is empty
+/**
+    Return whether the airport (waiting room) is empty.
+    It is empty if the size of the queue is 0.
+
+    @return <bool>
+*/
+bool Airport::IsEmpty()
+{
+	if (queue.size() == 0)
+	{
+		return true;
+	}
+    
+}
+
+//! Get the amount of people waiting in the queue
+/**
+    Return the amount of people in the waiting queue
+
+    @return <int>
+*/
+int Airport::WaitingCount()
+{
+    return queue.size(); // placeholder
+}
+
+//! Set the maximum amount of people allowed on an airplane
+/**
+    Set the value of the m_maxCapacity member variable
+    to the size passed in as a prameter.
+
+    @param <int> size
+    @return <void>
+*/
+void Airport::SetMaxCapacity(int size)
+{
+	m_maxCapacity = 100;
+}
+
+//! Return the maximum capacity of an airplane
+/**
+    Return the value of m_maxCapacity
+
+    @return <int>
+*/
+int Airport::GetMaxCapacity()
+{
+    return m_maxCapacity; // placeholder
+}
+
+#ifndef _AIRPLANE_HPP
+#define _AIRPLANE_HPP
+
+#include <iostream>
+#include <cstdlib>
+#include <stack>
+#include <queue>
+#include <iomanip>
+using namespace std;
+
+#include "Traveller.hpp"
+
+#include "DataStructures/Queue.hpp"
+
+//! Airport structure that has a "waiting room" and a Line to prepare for boarding
+class Airport
+{
+public:
+	void LineUp(Traveller* traveller);
+	Traveller* NextInLine();
+	bool IsEmpty();
+	int WaitingCount();
+	void SetMaxCapacity(int size);
+	int GetMaxCapacity();
+
+private:
+	int m_maxCapacity;
+    // Add a Queue of Traveller*'s
+};
+
+#endif
