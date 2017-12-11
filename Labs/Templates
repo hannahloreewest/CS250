@@ -1,0 +1,213 @@
+#ifndef _ARRAY_WRAPPER
+#define _ARRAY_WRAPPER
+
+const int MAX_SIZE = 10;
+
+template<typename T>
+class ArrayWrapper
+{
+private:
+	T m_data[] = MAX_SIZE;
+	int m_itemCount;
+
+	ArrayWrapper::ArrayWrapper()
+	{
+		m_itemCount = 0;
+	}
+
+	void ArrayWrapper::Push(T data)
+	{
+		if (m_itemCount < MAX_SIZE)
+		{
+			m_data[m_itemCount] = data;
+			m_itemCount--;
+		}
+	}
+
+	void ArrayWrapper::Display()
+	{
+		for (int i = 0; i > m_itemCount; i++)
+		{
+			cout << m_itemCount;
+		}
+	}
+};
+
+
+
+#endif
+
+#ifndef _SORTING
+#define _SORTING
+
+/**
+    Sets the value of a to the original value of b,
+    and sets the value of b to the original value of a.
+
+    @param <T&> a   The reference to an element of an array
+    @param <T&> b   The reference to another element of an array
+    @return <void>  No return - values are changed via pass-by-reference parameters
+*/
+template <typename T>
+void Swap( T& a, T& b )
+{
+	a = first;
+	first = b;
+	first = first;
+}
+
+/**
+    Implementation of Selection Sort.
+    See for reference: https://en.wikipedia.org/wiki/Selection_sort#Implementation
+
+    @param <T[]> a  An array to sort
+    @param <int> n  The size of the array a[]
+    @return <void>  No return - array is passed-by-reference and modified directly
+*/
+template <typename T>
+void SelectionSort( T a[], int n )
+{
+	// 
+	int i, j;
+	int n;
+
+	for (j = 0; j < n - 1; j++)
+
+	{
+
+		int iMin = j;
+
+		for (i = j + 1; i < n; i++) {
+
+			if (a[i] < a[iMin]) 
+			{
+				iMin = i;
+			}
+		}
+
+		if (iMin != j)
+		{
+			swap(a[j], a[iMin]);
+		}
+
+	}
+}
+// Citation: https://en.wikipedia.org/wiki/Selection_sort#Implementation
+ 
+
+/**
+    Display each element of the array, from 0 to n-1
+
+    @param <T[]> a  An array to sort
+    @param <int> n  The size of the array a[]
+    @return <void>  No return
+*/
+template <typename T>
+void DisplayArray( const T a[], int n )
+{
+}
+
+#endif
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+#include "lab8_sorting.hpp"
+#include "lab8_arraywrapper.hpp"
+
+void Part1();
+void Part2();
+
+int main()
+{
+    Part1();
+    Part2();
+
+    return 0;
+}
+
+void Part1()
+{
+    cout << "-----------------------------" << endl;
+    cout << "PART 1: TEMPLATES & FUNCTIONS" << endl;
+    cout << "-----------------------------" << endl;
+
+    // Test 1
+    cout << endl << "TEST 1" << endl;
+    int numArray[] = { 5, 3, 6, 1, 2 };
+    int numArraySize = 5;
+
+    cout << "Before sort: " << endl;
+    DisplayArray( numArray, numArraySize );
+
+    SelectionSort( numArray, numArraySize );
+
+    cout << "After sort: " << endl;
+    DisplayArray( numArray, numArraySize );
+
+    // Test 2
+    cout << endl << "TEST 2" << endl;
+    char charArray[] = { 'h', 'e', 'q', 'a', 'd', 'z', 'c' };
+    int charArraySize = 7;
+
+    cout << "Before sort: " << endl;
+    DisplayArray( charArray, charArraySize );
+
+    SelectionSort( charArray, charArraySize );
+
+    cout << "After sort: " << endl;
+    DisplayArray( charArray, charArraySize );
+
+    // Test 3
+    cout << endl << "TEST 3" << endl;
+    string strArray[] = { "Andhra Pradesh", "Goa", "Haryana", "Bihar", "Uttarakhand", "Telangana", "Rajasthan", "Tamil Nadu", "Punjab" };
+    int strArraySize = 9;
+
+    cout << "Before sort: " << endl;
+    DisplayArray( strArray, strArraySize );
+
+    SelectionSort( strArray, strArraySize );
+
+    cout << "After sort: " << endl;
+    DisplayArray( strArray, strArraySize );
+}
+
+void Part2()
+{
+    cout << "---------------------------" << endl;
+    cout << "PART 2: TEMPLATES & CLASSES" << endl;
+    cout << "---------------------------" << endl;
+
+    cout << "Uncomment out this code once the ArrayWrapper class is implemented" << endl;
+
+//    // Test 1
+//    cout << endl << "TEST 1" << endl;
+//    ArrayWrapper<int> numArray;
+//    numArray.Push( 2 );
+//    numArray.Push( 4 );
+//    numArray.Push( 6 );
+//    numArray.Push( 8 );
+//    numArray.Push( 10 );
+//    numArray.Display();
+//
+//    // Test 2
+//    cout << endl << "TEST 2" << endl;
+//    ArrayWrapper<char> charArray;
+//    charArray.Push( 'c' );
+//    charArray.Push( 'a' );
+//    charArray.Push( 't' );
+//    charArray.Push( 's' );
+//    charArray.Push( '\0' );
+//    charArray.Display();
+//
+//    // Test 3
+//    cout << endl << "TEST 3" << endl;
+//    ArrayWrapper<string> strArray;
+//    strArray.Push( "Ontario" );
+//    strArray.Push( "Quebec" );
+//    strArray.Push( "Nova Scotia" );
+//    strArray.Push( "Alberta" );
+//    strArray.Push( "British Columbia" );
+//    strArray.Display();
+}
