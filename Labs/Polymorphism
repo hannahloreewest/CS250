@@ -1,0 +1,218 @@
+#ifndef _CHARACTER
+#define _CHARACTER
+
+#include <string>
+using namespace std;
+
+enum TurnChoice { ATTACK = 0, HEAL = 1 };
+
+class ICharacter
+{
+	public: 
+		int GetAttack();
+		int GetHealing();
+		int GetHp();
+		void SubtractDamage(int damage);
+		string GetName();
+		virtual TurnChoice GetChoice() = 0;
+		void Setup(const string& name, int atk, int mag);
+
+
+	protected:
+		int m_hp;
+		int m_atk;
+		int m_mag;
+		string m_name;
+
+};
+
+class NPC : public ICharacter
+{
+
+};
+
+class Player : public ICharacter
+{
+
+};
+
+
+
+#endif
+
+#ifndef _GAME
+#define _GAME
+
+#include "lab9_Character.hpp"
+
+void ClearScreen()
+{
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+        system( "cls" );
+    #else
+        system( "clear" );
+    #endif
+}
+
+void DrawSeparator( int length )
+{
+    cout << endl;
+    for ( int i = 0; i < length; i++ )
+    {
+        cout << "-";
+    }
+    cout << endl;
+}
+
+void DisplayMenu( int round, int playerHP, int enemyHP )
+{
+    ClearScreen();
+    cout << "ROUND " << round << endl;
+    cout << "Your HP: " << playerHP << "\tEnemy HP: " << enemyHP << endl << endl;
+    cout << "0. Attack" << endl;
+    cout << "1. Heal" << endl;
+}
+
+void Game()
+{
+    Player player;
+   player.Setup( "Player", 10, 10 );
+
+    NPC npc;
+    npc.Setup( "Enemy", 5, 5 );
+
+    ICharacter* ptrPlayers[2];
+    ptrPlayers[0] = &player;
+   ptrPlayers[1] = &npc;
+
+    int round = 1;
+
+    while ( ptrPlayers[0]->GetHP() > 0 && ptrPlayers[1]->GetHP() > 0 )
+    {
+        DisplayMenu( round, ptrPlayers[0]->GetHP(), ptrPlayers[1]->GetHP() );
+
+        for ( int i = 0; i < 2; i++ )
+        {
+            TurnChoice choice = ptrPlayers[i]->GetChoice();
+
+            int otherPlayer;
+            if ( i == 0 )   { otherPlayer = 1; }
+            else            { otherPlayer = 0; }
+
+            if ( choice == ATTACK )
+            {
+                int damage = ptrPlayers[i]->GetAttack();
+
+                cout    << "* " << ptrPlayers[i]->GetName() << " attacks "
+                        << ptrPlayers[ otherPlayer ]->GetName() << " for "
+                        << damage << " damage!" << endl;
+
+                ptrPlayers[ otherPlayer ]->SubtractDamage( damage );
+           }
+            else if ( choice == HEAL )
+            {
+                int health = ptrPlayers[i]->GetHealing();
+
+                cout    << "* " << ptrPlayers[i]->GetName() << " heals themself for "
+                        << health << " HP!" << endl;
+            }
+        }
+
+        cout << endl;
+
+        round++;
+
+        cout << "Press a key to continue..." << endl;
+        cin.ignore();
+        cin.get();
+    }
+
+    for ( int i = 0; i < 2; i++ )
+    {
+        if ( ptrPlayers[i]->GetHP() <= 0 )
+        {
+            cout << ptrPlayers[i]->GetName() << " has been defeated!" << endl;
+        }
+    }
+
+    cout << endl << "GAME OVER" << endl;
+}
+
+#endif
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+#include "lab9_game.hpp"
+
+int main()
+{
+    Game();
+
+    return 0;
+}
+
+#include "Character.hpp"
+
+#include <cstdlib>
+#include <iostream>
+using namespace std;
+
+void ICharacter::Setup(const string& name, int atk, int mag)
+{
+	m_name = name; 
+    m_atk = atk; 
+	m_mag = mag; 
+	m_hp = 100;
+}
+
+
+int ICharacter::GetAttack()
+{
+	return rand() % m_atk;
+}
+
+int ICharacter::GetHealing()
+{
+	int healing = rand() % m_mag;
+	m_hp += healing;
+
+	if (m_hp > 100)
+	{
+		m_hp = 100;
+	}
+
+	return healing;
+}
+
+int ICharacter::GetHp()
+{
+	return m_hp;
+}
+
+string ICharacter::GetName()
+{
+	return m_name;
+}
+
+void ICharacter::SubtractDamage(int damage)
+{
+	m_hp -= damage;
+}
+
+TurnChoice NPC::GetChoice()
+{
+	return TurnChoice(rand() % 2);
+}
+
+TurnChoice Player::GetChoice()
+{
+	int choice;
+	cout << "Select your choice: ";
+	cin >> choice;
+	cout << endl;
+	return TurnChoice(choice);
+}
+
+
